@@ -36,19 +36,19 @@ public class App {
     @Option(name = "-key", required = true, usage = "JSON key file of authorized service account")
     private String jsonKeyPath;
 
-    @Option(name = "-name", usage = "(optional) Application name as registered on Play Store.")
+    @Option(name = "-name", usage = "(optional) App name on Play Store (defaults to name in apk)")
     private String appName;
 
     @Option(name = "-apk", required = true, usage = "The apk file to upload")
     private String apkPath;
 
-    @Option(name = "-track", required = true, usage = "Release track to use. Eg. alpha, beta, production etc.")
+    @Option(name = "-track", required = true, usage = "Release track to use. Eg. alpha, beta, production etc")
     private String trackName;
 
-    @Option(name = "-notes", forbids = "-notesFile", usage = "(optional) Release notes.")
+    @Option(name = "-notes", forbids = "-notesFile", usage = "(optional) Release notes")
     private String notes;
 
-    @Option(name = "-notesFile", forbids = "-notes", usage = "(optional) Release notes from file.")
+    @Option(name = "-notesFile", forbids = "-notes", usage = "(optional) Release notes from file")
     private String notesPath;
 
     /**
