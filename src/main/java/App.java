@@ -188,7 +188,7 @@ public class App {
             // commit edit
             System.out.println("Commiting edit...");
             edit = publisher.edits().commit(packageName, editId).execute();
-            System.out.println(String.format("Success. Comitted Edit id: %s", editId));
+            System.out.println(String.format("Success. Commited Edit id: %s", editId));
 
             // Success
         } catch (Exception e) {

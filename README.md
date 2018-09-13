@@ -1,3 +1,9 @@
+[![Build Status](https://travis-ci.org/codebysd/java-play-store-uploader.svg?branch=master)](https://travis-ci.org/codebysd/java-play-store-uploader)
+[![Open issues](https://img.shields.io/github/issues/codebysd/java-play-store-uploader.svg)](https://github.com/codebysd/java-play-store-uploader/issues)
+[![Pull requests](https://img.shields.io/github/issues-pr/codebysd/java-play-store-uploader.svg)](https://github.com/codebysd/java-play-store-uploader/pulls)
+[![GitHub issues](https://img.shields.io/github/release/codebysd/java-play-store-uploader.svg)](https://github.com/codebysd/java-play-store-uploader/releases)
+
+
 # Play Store Uploader
 
 This is a simple tool to upload android apk builds to play store. 
