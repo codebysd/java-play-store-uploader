@@ -1,0 +1,15 @@
+# Travis java build
+language: java
+script: ./gradlew clean assemble
+
+# Deploy exec zip on release tags
+deploy:
+  provider: releases
+  api_key: "GH_TOKEN"
+  file: "./build/distributions/PlayStoreUploader.zip"
+  skip_cleanup: true
+  on:
+    # only deploy tags from master, when tag is like: v1.0.0-alpha
+    branch: master
+    tags: true
+    condition: "$TRAVIS_TAG =~ ^(v\\d\\.\\d\\.\\d)(-\\w+)?$"
