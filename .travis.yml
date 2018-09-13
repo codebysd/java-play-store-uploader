@@ -1,6 +1,5 @@
 # Travis java build
 language: java
-script: ./gradlew clean assemble
 
 # Cache gradle downloads
 before_cache:
