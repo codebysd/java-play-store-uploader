@@ -1,0 +1,21 @@
+buildscript {
+
+}
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'io.pivotal.labs.exedist' version '1.0.0'
+}
+
+mainClassName = 'App'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.apis:google-api-services-androidpublisher:v3-rev23-1.25.0'
+    compile 'args4j:args4j:2.33'
+    compile 'net.dongliu:apk-parser:2.6.2'
+}
