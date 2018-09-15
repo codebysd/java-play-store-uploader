@@ -5,10 +5,19 @@ buildscript {
 plugins {
     id 'java'
     id 'application'
-    id 'io.pivotal.labs.exedist' version '1.0.0'
+    id 'org.ajoberstar.reckon' version '0.8.0'
+    id "com.github.onslip.gradle-one-jar" version "1.0.5"
 }
 
+group = 'codebysd'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 mainClassName = 'App'
+
+reckon {
+  scopeFromProp()
+  stageFromProp('beta','rc','final')
+}
 
 repositories {
     mavenCentral()
