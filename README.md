@@ -11,7 +11,7 @@ Suitable for automation of play store uploads in a CI system.
 
 ## Requirements
 
-1. Java (JRE) 7 or above
+1. Java (JRE) 8 or above
 
 ## Install
 

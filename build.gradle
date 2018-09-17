@@ -1,30 +1,47 @@
-buildscript {
-
-}
-
+/**
+ * Plugins
+ */
 plugins {
     id 'java'
     id 'application'
-    id 'org.ajoberstar.reckon' version '0.8.0'
-    id "com.github.onslip.gradle-one-jar" version "1.0.5"
+    id 'com.github.onslip.gradle-one-jar' version '1.0.5'
 }
 
-group = 'codebysd'
+/**
+ * Project Info
+ */
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+version = getVersion()
 mainClassName = 'App'
 
-reckon {
-  scopeFromProp()
-  stageFromProp('beta','rc','final')
-}
-
+/**
+ * Repositories
+ */
 repositories {
     mavenCentral()
 }
 
+/**
+ * Dependencies
+ */
 dependencies {
     compile 'com.google.apis:google-api-services-androidpublisher:v3-rev23-1.25.0'
     compile 'args4j:args4j:2.33'
     compile 'net.dongliu:apk-parser:2.6.2'
+}
+
+
+/**
+ * Get version from last git tag.
+ * @returns Last git tag
+ */
+def getVersion(){
+    def out = new ByteArrayOutputStream();
+    exec {
+        executable = 'git'
+        args = ['describe', '--tags']
+        standardOutput = out
+    }
+    return out.toString().replace('\n','')
 }
