@@ -51,12 +51,19 @@ public class App {
     @Option(name = "-notesFile", forbids = "-notes", usage = "(optional) Release notes from file")
     private String notesPath;
 
+    @Option(name = "-proxyHost", forbids = "", usage = "(optional) Configure the proxy address")
+    private String proxyHost;
+
+    @Option(name = "-proxyPort", forbids = "", usage = "(optional) Configure the proxy port")
+    private String proxyPort;
+
     /**
      * Entry point
-     * 
+     *
      * @param args process arguments
      */
     public static void main(String... args) {
+        
         try {
             // do upload
             new App().parseArgs(args).upload();
@@ -70,7 +77,7 @@ public class App {
 
     /**
      * Construct localized version on message
-     * 
+     *
      * @param message message
      * @return localized version
      */
@@ -91,7 +98,7 @@ public class App {
 
     /**
      * Parse process arguments.
-     * 
+     *
      * @param args process arguments
      * @throws Exception argumentss error
      * @return {@link App} instance
@@ -123,10 +130,18 @@ public class App {
 
     /**
      * Perform apk upload an release on given track
-     * 
+     *
      * @throws Exception Upload error
      */
     private void upload() throws Exception {
+        // configure proxy
+        if (this.proxyHost != null && !this.proxyHost.isEmpty()) {
+            System.setProperty("https.proxyHost", this.proxyHost);
+        }
+
+        if (this.proxyPort != null && !this.proxyPort.isEmpty()) {
+            System.setProperty("https.proxyPort", this.proxyPort);
+        }
 
         // load key file credentials
         System.out.println("Loading account credentials...");
