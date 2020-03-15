@@ -8,7 +8,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+
+
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.FileContent;
 import com.google.api.services.androidpublisher.AndroidPublisher;
@@ -19,6 +25,9 @@ import com.google.api.services.androidpublisher.model.LocalizedText;
 import com.google.api.services.androidpublisher.model.Track;
 import com.google.api.services.androidpublisher.model.TrackRelease;
 
+import com.google.auth.http.HttpCredentialsAdapter;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.common.collect.ImmutableList;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Localizable;
@@ -146,8 +155,9 @@ public class App {
         // load key file credentials
         System.out.println("Loading account credentials...");
         Path jsonKey = FileSystems.getDefault().getPath(this.jsonKeyPath).normalize();
-        GoogleCredential cred = GoogleCredential.fromStream(new FileInputStream(jsonKey.toFile()));
-        cred = cred.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
+        GoogleCredentials credentials = GoogleCredentials
+                .fromStream(new FileInputStream(jsonKey.toFile()))
+                .createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
 
         // load apk file info
         System.out.println("Loading apk file information...");
@@ -175,7 +185,10 @@ public class App {
 
         // init publisher
         System.out.println("Initialising publisher service...");
-        AndroidPublisher.Builder ab = new AndroidPublisher.Builder(cred.getTransport(), cred.getJsonFactory(), cred);
+        HttpTransport transport = new NetHttpTransport();
+        JsonFactory jsonFactory = new JacksonFactory();
+        HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(credentials);
+        AndroidPublisher.Builder ab = new AndroidPublisher.Builder(transport, jsonFactory, requestInitializer);
         AndroidPublisher publisher = ab.setApplicationName(applicationName).build();
 
         // create an edit
@@ -193,16 +206,27 @@ public class App {
 
             // create a release on track
             System.out.println(String.format("On track:%s. Creating a release...", this.trackName));
-            TrackRelease release = new TrackRelease().setName("Automated upload").setStatus("completed")
-                    .setVersionCodes(Collections.singletonList((long) apk.getVersionCode()))
-                    .setReleaseNotes(releaseNotes);
-            Track track = new Track().setReleases(Collections.singletonList(release));
-            track = publisher.edits().tracks().update(packageName, editId, this.trackName, track).execute();
+
+            List<Long> apkVersionCodes = ImmutableList.of(Long.valueOf(apk.getVersionCode()));
+
+            Track track = new Track()
+                    .setTrack(this.trackName)
+                    .setReleases(
+                        Collections.singletonList(
+                                new TrackRelease()
+                                        .setName("Automated upload")
+                                        .setVersionCodes(apkVersionCodes)
+                                        .setStatus("completed")
+                                        .setReleaseNotes(releaseNotes)));
+
+            AndroidPublisher.Edits.Tracks.Update update = publisher.edits().tracks().update(packageName, editId, this.trackName, track);
+            update.execute();
+
             System.out.println(String.format("Release created on track: %s", this.trackName));
 
             // commit edit
             System.out.println("Commiting edit...");
-            edit = publisher.edits().commit(packageName, editId).execute();
+            publisher.edits().commit(packageName, editId).execute();
             System.out.println(String.format("Success. Commited Edit id: %s", editId));
 
             // Success

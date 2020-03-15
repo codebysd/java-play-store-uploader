@@ -26,7 +26,9 @@ repositories {
  * Dependencies
  */
 dependencies {
-    compile 'com.google.apis:google-api-services-androidpublisher:v3-rev23-1.25.0'
+    compile 'com.google.apis:google-api-services-androidpublisher:v3-rev20200223-1.30.9'
+    compile 'com.google.auth:google-auth-library-oauth2-http:0.20.0'
+    compile 'com.google.api-client:google-api-client:1.30.5'
     compile 'args4j:args4j:2.33'
     compile 'net.dongliu:apk-parser:2.6.2'
 }
